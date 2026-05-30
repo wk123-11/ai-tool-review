@@ -8,7 +8,7 @@ import subprocess
 from pathlib import Path
 
 SITE_DIR = Path("/home/wk/ai-tool-review")
-GITHUB_USER = "wk"  # 用户可修改
+GITHUB_USER = "wk123-11"  # 用户可修改
 
 def run(cmd, cwd=None):
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True, cwd=cwd or SITE_DIR)
