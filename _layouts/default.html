@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if page.title %}{{ page.title }} - {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+  <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+  <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css">
+  <link rel="sitemap" type="application/xml" href="{{ site.baseurl }}/sitemap.xml">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="{{ site.baseurl }}/" class="logo">{{ site.title }}</a>
+      <nav>
+        <a href="{{ site.baseurl }}/">首页</a>
+        <a href="{{ site.baseurl }}/about/">关于</a>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    {{ content }}
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <p>{{ site.title }} &copy; {{ site.time | date: '%Y' }} | 精选AI工具与效率方法</p>
+    </div>
+  </footer>
+</body>
+</html>

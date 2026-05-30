@@ -1,0 +1,19 @@
+---
+layout: default
+title: AI工具派
+---
+<section class="hero">
+  <h2>精选AI工具 · 效率方法 · 副业思路</h2>
+  <p>每天更新，用AI工具提升你的工作和生活效率</p>
+</section>
+
+<section class="posts-list">
+  <h3>最新文章</h3>
+  {% for post in site.posts limit:20 %}
+  <article class="post-item">
+    <h4><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h4>
+    <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 120 }}</p>
+    <p class="post-meta">{{ post.date | date: '%Y-%m-%d' }}</p>
+  </article>
+  {% endfor %}
+</section>
