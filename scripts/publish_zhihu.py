@@ -179,7 +179,10 @@ def api_request(method, api_path, cookie_str, d_c0, xsrf, body=None):
     req = urllib.request.Request(url, data=data, headers=headers, method=method)
     try:
         with urllib.request.urlopen(req, timeout=30) as resp:
-            result = json.loads(resp.read().decode("utf-8"))
+            raw = resp.read()
+            if not raw:
+                return {}, resp.status
+            result = json.loads(raw.decode("utf-8"))
             return result, resp.status
     except urllib.error.HTTPError as e:
         err_body = e.read().decode("utf-8", errors="replace")[:500]
