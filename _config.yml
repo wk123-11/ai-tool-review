@@ -1,19 +1,9 @@
-title: AI工具派
-description: 精选AI工具评测、效率技巧、副业方法 — 每天更新
-url: "https://wk123-11.github.io/ai-tool-review"
-baseurl: "/ai-tool-review"
-markdown: kramdown
-permalink: /:year/:month/:day/:title/
-plugins:
-  - jekyll-seo-tag
-  - jekyll-sitemap
-exclude:
-  - scripts/
-  - README.md
-defaults:
-  - scope:
-      path: ""
-      type: "posts"
-    values:
-      layout: post
-      author: AI工具派
+title: AI 智能工具派评测站
+description: 评测 AI 工具、开发效率提升指南
+baseurl: /
+url: https://ai-tools.wk.dev
+author: WK
+collections:
+  posts:
+    permalink: /:year-:month-:day-:title:
+    output: true

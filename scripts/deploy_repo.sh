@@ -3,7 +3,7 @@
 # 用法: ./scripts/deploy_repo.sh
 set -e
 
-TOKEN=*** /home/wk/ai-tool-review/scripts/.ghtoken)
+TOKEN=$(cat /home/wk/ai-tool-review/scripts/.ghtoken)
 
 cd /home/wk/ai-tool-review
 

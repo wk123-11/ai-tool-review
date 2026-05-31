@@ -1,0 +1,7 @@
+@mixin media-breakpoint-down($infix) {
+  @if $infix == "" {
+    @media(max-width: 767px) { }
+  } @else {
+    @media(max-width: #{breakpoint($infix, "")}rem) { }
+  }
+}
