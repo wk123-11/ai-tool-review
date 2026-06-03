@@ -20,35 +20,31 @@ HEADERS = {
     'Referer': 'https://mp.toutiao.com/profile_v4/graphic/publish',
 }
 
-def get_upload_token():
-    """获取图片上传 token"""
-    req = urllib.request.Request(
-        'https://mp.toutiao.com/mp/agw/article_material/token/create',
-        headers=HEADERS
-    )
-    with urllib.request.urlopen(req, timeout=15) as resp:
-        return json.loads(resp.read().decode('utf-8'))
+import urllib.error
 
-def encode_multipart_formdata(fields, filename, filedata, content_type):
-    """构建 multipart/form-data 请求体"""
+def extract_csrf_token():
+    """从 cookie 中提取 x-secsdk-csrf-token"""
+    cookie = COOKIE_FILE.read_text().strip()
+    m = re.search(r'passport_csrf_token=([^;]+)', cookie)
+    if m:
+        return m.group(1)
+    return ''
+
+def encode_multipart_formdata_single(filename, filedata, content_type):
+    """构建单个文件上传的 multipart/form-data 请求体（字段名: image）"""
     boundary = '----WebKitFormBoundary' + uuid.uuid4().hex[:16]
     body = io.BytesIO()
     
-    for key, value in fields.items():
-        body.write(f'--{boundary}\r\n'.encode())
-        body.write(f'Content-Disposition: form-data; name="{key}"\r\n\r\n'.encode())
-        body.write(f'{value}\r\n'.encode())
-    
     body.write(f'--{boundary}\r\n'.encode())
-    body.write(f'Content-Disposition: form-data; name="file"; filename="{filename}"\r\n'.encode())
+    body.write(f'Content-Disposition: form-data; name="image"; filename="{filename}"\r\n'.encode())
     body.write(f'Content-Type: {content_type}\r\n\r\n'.encode())
     body.write(filedata)
     body.write(f'\r\n--{boundary}--\r\n'.encode())
     
     return body.getvalue(), f'multipart/form-data; boundary={boundary}'
 
-def upload_image(img_path, token):
-    """上传一张图片到头条号"""
+def upload_image(img_path, token=None):
+    """上传一张图片到头条号（使用 /spice/image 端点）"""
     img_path = Path(img_path)
     if not img_path.exists():
         print(f"❌ Image not found: {img_path}")
@@ -57,9 +53,8 @@ def upload_image(img_path, token):
     with open(img_path, 'rb') as f:
         img_data = f.read()
     
-    # Determine content type
     ext = img_path.suffix.lower()
-    content_type = {
+    mime_type = {
         '.jpg': 'image/jpeg',
         '.jpeg': 'image/jpeg',
         '.png': 'image/png',
@@ -67,26 +62,24 @@ def upload_image(img_path, token):
         '.webp': 'image/webp',
     }.get(ext, 'image/jpeg')
     
-    fields = {
-        'token': token,
-        'app_id': '1231',
-        'source': 'mp',
+    body, ct = encode_multipart_formdata_single(img_path.name, img_data, mime_type)
+    
+    url = 'https://mp.toutiao.com/spice/image?upload_source=20020002&aid=1231&device_platform=web'
+    csrf_token = extract_csrf_token()
+    headers = {
+        **HEADERS,
+        'Content-Type': ct,
+        'x-secsdk-csrf-token': csrf_token,
     }
-    
-    body, ct = encode_multipart_formdata(fields, img_path.name, img_data, content_type)
-    
-    url = 'https://mp.toutiao.com/mp/agw/article_material/photo/upload_picture'
-    headers = {**HEADERS, 'Content-Type': ct}
     
     req = urllib.request.Request(url, data=body, headers=headers, method='POST')
     try:
         with urllib.request.urlopen(req, timeout=30) as resp:
             result = json.loads(resp.read().decode('utf-8'))
             if result.get('code') == 0:
-                # Extract the CDN URL from response
-                # Typical response: {"code":0,"data":{"url":"https://p3-xxx.byteimg.com/...","web_url":"..."}}
                 data = result.get('data', {})
-                cdn_url = data.get('url') or data.get('web_url')
+                # New endpoint returns image_url (includes CDN + signed params)
+                cdn_url = data.get('image_url') or data.get('url')
                 if cdn_url:
                     print(f"   ✅ {img_path.name} → {cdn_url[:80]}...")
                     return cdn_url
@@ -94,11 +87,12 @@ def upload_image(img_path, token):
                     print(f"   ⚠️  No URL in response: {json.dumps(result, ensure_ascii=False)[:200]}")
                     return None
             else:
-                print(f"   ❌ Upload failed: {result.get('message', 'unknown')}")
+                print(f"   ❌ Upload failed (code {result.get('code')}): {result.get('message', 'unknown')}")
                 print(f"   Response: {json.dumps(result, ensure_ascii=False)[:200]}")
                 return None
     except urllib.error.HTTPError as e:
-        print(f"   ❌ HTTP {e.code}: {e.read().decode()[:200]}")
+        body = e.read().decode('utf-8', errors='replace')
+        print(f"   ❌ HTTP {e.code}: {body[:200]}")
         return None
     except Exception as e:
         print(f"   ❌ Error: {e}")
@@ -276,22 +270,12 @@ def main():
         publish_article(title, html)
         return
     
-    # Step 2: Get upload token
-    print("📡 获取上传 token...")
-    token_resp = get_upload_token()
-    if token_resp.get('code') != 0:
-        print(f"❌ 获取 token 失败: {token_resp}")
-        sys.exit(1)
-    
-    token = token_resp['token_info']['token']
-    print(f"   Token: {token[:20]}...")
-    
-    # Step 3: Upload each image
+    # Step 2: Upload each image (new /spice/image endpoint doesn't need token)
     uploaded = {}
     for fname in sorted(image_files):
         img_path = IMG_DIR / fname
         print(f"📤 上传 {fname}...")
-        cdn_url = upload_image(img_path, token)
+        cdn_url = upload_image(img_path)
         if cdn_url:
             uploaded[fname] = cdn_url
     
