@@ -27,6 +27,10 @@ from zhihu_zse96 import get_xzse96
 COOKIE_FILE = SCRIPT_DIR / ".zhihu_cookie"
 BASE_URL = "https://zhuanlan.zhihu.com"
 
+# 知乎外部图床：文章中的图片相对路径会替换为 GitHub raw URL
+# markdown 引用图片时用 `images/xxx.jpg`，发布时自动转成完整可访问 URL
+GITHUB_RAW_BASE = "https://raw.githubusercontent.com/wk123-11/ai-tool-review/main/"
+
 
 def load_cookie():
     """从文件加载 cookie, 提取 d_c0 和 z_c0"""
@@ -110,42 +114,154 @@ def parse_markdown_post(filepath):
     return title, body
 
 
+def _inline_format(text):
+    """行内格式：加粗、斜体、行内代码、链接"""
+    text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
+    text = re.sub(r'(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)', r'<em>\1</em>', text)
+    text = re.sub(r'`(.+?)`', r'<code>\1</code>', text)
+    text = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2" rel="nofollow">\1</a>', text)
+    return text
+
+
+def _parse_table(lines, start_idx):
+    """解析 markdown 表格，返回 (html, end_idx)"""
+    rows = []
+    i = start_idx
+    while i < len(lines):
+        stripped = lines[i].strip()
+        if not stripped.startswith("|"):
+            break
+        if re.match(r"^\|[\s\-:]+\|", stripped):
+            i += 1
+            continue
+        cells = [c.strip() for c in stripped.strip("|").split("|")]
+        rows.append(cells)
+        i += 1
+
+    if not rows:
+        return "", start_idx
+
+    html = '<table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:14px;">\n'
+    html += "<thead><tr>\n"
+    for cell in rows[0]:
+        html += '<th style="border:1px solid #ddd;padding:8px;background:#f5f5f5;font-weight:bold;text-align:left;">' + _inline_format(cell) + "</th>\n"
+    html += "</tr></thead>\n"
+    if len(rows) > 1:
+        html += "<tbody>\n"
+        for row in rows[1:]:
+            html += "<tr>\n"
+            for cell in row:
+                html += '<td style="border:1px solid #ddd;padding:8px;text-align:left;">' + _inline_format(cell) + "</td>\n"
+            html += "</tr>\n"
+        html += "</tbody>\n"
+    html += "</table>\n"
+    return html, i
+
+
 def markdown_to_zhihu_html(md_text):
-    """Markdown → 知乎兼容 HTML"""
+    """Markdown → 知乎兼容 HTML（支持表格、引用、加粗等）"""
     lines = md_text.split("\n")
     html_parts = []
+    in_blockquote = False
     in_list = False
+    in_ordered_list = False
+    i = 0
 
-    for line in lines:
-        s = line.strip()
+    while i < len(lines):
+        stripped = lines[i].strip()
+
+        # Table (multi-line block)
+        if stripped.startswith("|"):
+            if in_blockquote: html_parts.append('</blockquote>\n'); in_blockquote = False
+            if in_list: html_parts.append('</ul>\n'); in_list = False
+            if in_ordered_list: html_parts.append('</ol>\n'); in_ordered_list = False
+            table_html, next_i = _parse_table(lines, i)
+            html_parts.append(table_html)
+            i = next_i
+            continue
+
+        # Image
+        img_match = re.match(r"^!\[([^\]]*)\]\(([^)]+)\)$", stripped)
+        if img_match:
+            if in_blockquote: html_parts.append('</blockquote>\n'); in_blockquote = False
+            if in_list: html_parts.append('</ul>\n'); in_list = False
+            if in_ordered_list: html_parts.append('</ol>\n'); in_ordered_list = False
+            alt, src = img_match.group(1), img_match.group(2)
+            # 图片相对路径 → GitHub raw URL（避免头条 CDN 裂图）
+            if not src.startswith("http"):
+                src = GITHUB_RAW_BASE + src
+            html_parts.append(f'<p><img src="{src}" alt="{alt}" style="max-width:100%"></p>\n')
+            i += 1
+            continue
+
+        # Horizontal rule
+        if stripped.startswith("---") and len(stripped) >= 3:
+            if in_blockquote: html_parts.append('</blockquote>\n'); in_blockquote = False
+            if in_list: html_parts.append('</ul>\n'); in_list = False
+            if in_ordered_list: html_parts.append('</ol>\n'); in_ordered_list = False
+            html_parts.append('<hr style="border:none;border-top:1px solid #e0e0e0;margin:20px 0;">\n')
+            i += 1
+            continue
+
+        # Blockquote
+        if stripped.startswith("> "):
+            if in_list: html_parts.append('</ul>\n'); in_list = False
+            if in_ordered_list: html_parts.append('</ol>\n'); in_ordered_list = False
+            if not in_blockquote:
+                html_parts.append('<blockquote style="border-left:4px solid #ddd;margin:12px 0;padding:8px 16px;color:#666;">\n')
+                in_blockquote = True
+            html_parts.append(f"<p>{_inline_format(stripped[2:])}</p>\n")
+            i += 1
+            continue
+
+        if in_blockquote:
+            html_parts.append('</blockquote>\n')
+            in_blockquote = False
 
         # Headers
-        if s.startswith("## "):
-            if in_list: html_parts.append("</ul>"); in_list = False
-            html_parts.append(f"<h2>{s[3:]}</h2>")
-        elif s.startswith("### "):
-            if in_list: html_parts.append("</ul>"); in_list = False
-            html_parts.append(f"<h3>{s[4:]}</h3>")
-        elif s.startswith("#### "):
-            if in_list: html_parts.append("</ul>"); in_list = False
-            html_parts.append(f"<h4>{s[5:]}</h4>")
-        # Paragraph
-        elif s and not s.startswith("#") and not s.startswith("- ") and not s.startswith("* "):
-            if in_list: html_parts.append("</ul>"); in_list = False
-            if re.match(r"^\d+\.\s", s):
-                html_parts.append(f"<p>{s}</p>")
-            else:
-                html_parts.append(f"<p>{s}</p>")
-        # List
-        elif s.startswith("- ") or s.startswith("* "):
-            if not in_list: html_parts.append("<ul>"); in_list = True
-            html_parts.append(f"<li>{s[2:]}</li>")
-        # Empty
-        elif not s:
-            if in_list: html_parts.append("</ul>"); in_list = False
+        if stripped.startswith("#### "):
+            if in_list: html_parts.append('</ul>\n'); in_list = False
+            if in_ordered_list: html_parts.append('</ol>\n'); in_ordered_list = False
+            html_parts.append(f"<h4>{_inline_format(stripped[5:])}</h4>\n")
+            i += 1; continue
+        elif stripped.startswith("### "):
+            if in_list: html_parts.append('</ul>\n'); in_list = False
+            if in_ordered_list: html_parts.append('</ol>\n'); in_ordered_list = False
+            html_parts.append(f"<h3>{_inline_format(stripped[4:])}</h3>\n")
+            i += 1; continue
+        elif stripped.startswith("## "):
+            if in_list: html_parts.append('</ul>\n'); in_list = False
+            if in_ordered_list: html_parts.append('</ol>\n'); in_ordered_list = False
+            html_parts.append(f"<h2>{_inline_format(stripped[3:])}</h2>\n")
+            i += 1; continue
 
-    if in_list:
-        html_parts.append("</ul>")
+        # Unordered list
+        if stripped.startswith("- ") or stripped.startswith("* "):
+            if in_ordered_list: html_parts.append('</ol>\n'); in_ordered_list = False
+            if not in_list: html_parts.append('<ul>\n'); in_list = True
+            html_parts.append(f"<li>{_inline_format(stripped[2:])}</li>\n")
+            i += 1; continue
+
+        # Ordered list
+        ol_match = re.match(r"^\d+\.\s+(.*)", stripped)
+        if ol_match:
+            if in_list: html_parts.append('</ul>\n'); in_list = False
+            if not in_ordered_list: html_parts.append('<ol>\n'); in_ordered_list = True
+            html_parts.append(f"<li>{_inline_format(ol_match.group(1))}</li>\n")
+            i += 1; continue
+
+        if in_list: html_parts.append('</ul>\n'); in_list = False
+        if in_ordered_list: html_parts.append('</ol>\n'); in_ordered_list = False
+
+        if not stripped:
+            i += 1; continue
+
+        html_parts.append(f"<p>{_inline_format(stripped)}</p>\n")
+        i += 1
+
+    if in_blockquote: html_parts.append('</blockquote>\n')
+    if in_list: html_parts.append('</ul>\n')
+    if in_ordered_list: html_parts.append('</ol>\n')
 
     return "".join(html_parts)
 

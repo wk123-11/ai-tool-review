@@ -1,0 +1,16 @@
+{
+  "entries": [
+    {
+      "date": "2026-06-03",
+      "article_chars": 4726,
+      "deepseek_tokens": {
+        "input": 20400,
+        "output": 5700,
+        "total": 26100
+      },
+      "claude_input_chars": 0,
+      "claude_output_chars": 0,
+      "publish_success": false
+    }
+  ]
+}

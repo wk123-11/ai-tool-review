@@ -30,9 +30,9 @@ def parse_markdown_post(filepath):
     if not path.exists():
         print(f"❌ File not found: {filepath}")
         sys.exit(1)
-    
+
     text = path.read_text(encoding="utf-8")
-    
+
     # Parse Jekyll frontmatter
     title = ""
     date_str = ""
@@ -53,73 +53,252 @@ def parse_markdown_post(filepath):
         lines = text.strip().split("\n")
         title = lines[0].strip().strip("#").strip()
         body = "\n".join(lines[1:]).strip()
-    
+
     return title, body
 
+
+def _inline_format(text):
+    """处理行内格式：加粗、斜体、行内代码、链接"""
+    # Bold **text** (must be before italic to avoid overlap)
+    text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
+    # Italic *text* (single asterisk, not inside words)
+    text = re.sub(r'(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)', r'<em>\1</em>', text)
+    # Inline code `code`
+    text = re.sub(r'`(.+?)`', r'<code>\1</code>', text)
+    # Links [text](url)
+    text = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2" rel="nofollow">\1</a>', text)
+    return text
+
+
+def _parse_table(lines, start_idx):
+    """从 start_idx 开始解析一个 markdown 表格，返回 (html, end_idx)"""
+    rows = []
+    i = start_idx
+    while i < len(lines):
+        stripped = lines[i].strip()
+        if not stripped.startswith("|"):
+            break
+        # Skip separator row (|--|--|)
+        if re.match(r"^\|[\s\-:]+\|", stripped):
+            i += 1
+            continue
+        # Parse table row
+        cells = [c.strip() for c in stripped.strip("|").split("|")]
+        rows.append(cells)
+        i += 1
+
+    if not rows:
+        return "", start_idx
+
+    html = '<table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:14px;">\n'
+    # Header row
+    html += "<thead><tr>\n"
+    for cell in rows[0]:
+        html += '<th style="border:1px solid #ddd;padding:8px;background:#f5f5f5;font-weight:bold;text-align:left;">' + _inline_format(cell) + "</th>\n"
+    html += "</tr></thead>\n"
+    # Body rows
+    if len(rows) > 1:
+        html += "<tbody>\n"
+        for row in rows[1:]:
+            html += "<tr>\n"
+            for cell in row:
+                html += '<td style="border:1px solid #ddd;padding:8px;text-align:left;">' + _inline_format(cell) + "</td>\n"
+            html += "</tr>\n"
+        html += "</tbody>\n"
+    html += "</table>\n"
+    return html, i
+
+
 def markdown_to_toutiao_html(markdown_text):
-    """将 Markdown 转为头条号兼容的 HTML"""
+    """将 Markdown 转为头条号兼容的 HTML（支持表格、引用、加粗等）"""
     lines = markdown_text.split("\n")
     html_parts = []
+    in_blockquote = False
     in_list = False
-    
-    for i, line in enumerate(lines):
-        stripped = line.strip()
-        
-        # Headers
-        if stripped.startswith("## "):
+    in_ordered_list = False
+    i = 0
+
+    while i < len(lines):
+        stripped = lines[i].strip()
+
+        # --- Table (multi-line block) ---
+        if stripped.startswith("|"):
+            if in_blockquote:
+                html_parts.append('</blockquote>\n')
+                in_blockquote = False
             if in_list:
-                html_parts.append("</ul>")
+                html_parts.append('</ul>\n')
                 in_list = False
-            html_parts.append(f"<h2>{stripped[3:]}</h2>")
+            if in_ordered_list:
+                html_parts.append('</ol>\n')
+                in_ordered_list = False
+            table_html, next_i = _parse_table(lines, i)
+            html_parts.append(table_html)
+            i = next_i
+            continue
+
+        # --- Image ---
+        img_match = re.match(r"^!\[([^\]]*)\]\(([^)]+)\)$", stripped)
+        if img_match:
+            if in_blockquote:
+                html_parts.append('</blockquote>\n')
+                in_blockquote = False
+            if in_list:
+                html_parts.append('</ul>\n')
+                in_list = False
+            if in_ordered_list:
+                html_parts.append('</ol>\n')
+                in_ordered_list = False
+            alt = img_match.group(1)
+            src = img_match.group(2)
+            html_parts.append(f'<p><img src="{src}" alt="{alt}" style="max-width:100%"></p>\n')
+            i += 1
+            continue
+
+        # --- Horizontal rule ---
+        if stripped.startswith("---") and len(stripped) >= 3:
+            if in_blockquote:
+                html_parts.append('</blockquote>\n')
+                in_blockquote = False
+            if in_list:
+                html_parts.append('</ul>\n')
+                in_list = False
+            if in_ordered_list:
+                html_parts.append('</ol>\n')
+                in_ordered_list = False
+            html_parts.append('<hr style="border:none;border-top:1px solid #e0e0e0;margin:20px 0;">\n')
+            i += 1
+            continue
+
+        # --- Blockquote ---
+        if stripped.startswith("> "):
+            if in_list:
+                html_parts.append('</ul>\n')
+                in_list = False
+            if in_ordered_list:
+                html_parts.append('</ol>\n')
+                in_ordered_list = False
+            if not in_blockquote:
+                html_parts.append('<blockquote style="border-left:4px solid #ddd;margin:12px 0;padding:8px 16px;color:#666;">\n')
+                in_blockquote = True
+            content = _inline_format(stripped[2:])
+            html_parts.append(f"<p>{content}</p>\n")
+            i += 1
+            continue
+
+        # Close blockquote on non-quote lines
+        if in_blockquote:
+            html_parts.append('</blockquote>\n')
+            in_blockquote = False
+
+        # --- Headers ---
+        if stripped.startswith("#### "):
+            if in_list:
+                html_parts.append('</ul>\n')
+                in_list = False
+            if in_ordered_list:
+                html_parts.append('</ol>\n')
+                in_ordered_list = False
+            html_parts.append(f"<h4>{_inline_format(stripped[5:])}</h4>\n")
+            i += 1
+            continue
         elif stripped.startswith("### "):
             if in_list:
-                html_parts.append("</ul>")
+                html_parts.append('</ul>\n')
                 in_list = False
-            html_parts.append(f"<h3>{stripped[4:]}</h3>")
-        elif stripped.startswith("#### "):
+            if in_ordered_list:
+                html_parts.append('</ol>\n')
+                in_ordered_list = False
+            html_parts.append(f"<h3>{_inline_format(stripped[4:])}</h3>\n")
+            i += 1
+            continue
+        elif stripped.startswith("## "):
             if in_list:
-                html_parts.append("</ul>")
+                html_parts.append('</ul>\n')
                 in_list = False
-            html_parts.append(f"<h4>{stripped[5:]}</h4>")
-        # Paragraph
-        elif stripped and not stripped.startswith("#") and not stripped.startswith("- ") and not stripped.startswith("* "):
+            if in_ordered_list:
+                html_parts.append('</ol>\n')
+                in_ordered_list = False
+            html_parts.append(f"<h2>{_inline_format(stripped[3:])}</h2>\n")
+            i += 1
+            continue
+        elif stripped.startswith("# "):
             if in_list:
-                html_parts.append("</ul>")
+                html_parts.append('</ul>\n')
                 in_list = False
-            # Check if it's a numbered list
-            if re.match(r"^\d+\.\s", stripped):
-                html_parts.append(f"<p>{stripped}</p>")
-            else:
-                html_parts.append(f"<p>{stripped}</p>")
-        # List items
-        elif stripped.startswith("- ") or stripped.startswith("* "):
+            if in_ordered_list:
+                html_parts.append('</ol>\n')
+                in_ordered_list = False
+            html_parts.append(f"<h1>{_inline_format(stripped[2:])}</h1>\n")
+            i += 1
+            continue
+
+        # --- Unordered list ---
+        if stripped.startswith("- ") or stripped.startswith("* "):
+            if in_ordered_list:
+                html_parts.append('</ol>\n')
+                in_ordered_list = False
             if not in_list:
-                html_parts.append("<ul>")
+                html_parts.append('<ul>\n')
                 in_list = True
-            html_parts.append(f"<li>{stripped[2:]}</li>")
-        # Empty lines
-        elif not stripped:
+            content = _inline_format(stripped[2:])
+            html_parts.append(f"<li>{content}</li>\n")
+            i += 1
+            continue
+
+        # --- Ordered list ---
+        ol_match = re.match(r"^\d+\.\s+(.*)", stripped)
+        if ol_match:
             if in_list:
-                html_parts.append("</ul>")
+                html_parts.append('</ul>\n')
                 in_list = False
-    
+            if not in_ordered_list:
+                html_parts.append('<ol>\n')
+                in_ordered_list = True
+            content = _inline_format(ol_match.group(1))
+            html_parts.append(f"<li>{content}</li>\n")
+            i += 1
+            continue
+
+        # --- Close lists on non-list lines ---
+        if in_list:
+            html_parts.append('</ul>\n')
+            in_list = False
+        if in_ordered_list:
+            html_parts.append('</ol>\n')
+            in_ordered_list = False
+
+        # --- Empty line ---
+        if not stripped:
+            i += 1
+            continue
+
+        # --- Regular paragraph ---
+        html_parts.append(f"<p>{_inline_format(stripped)}</p>\n")
+        i += 1
+
+    # Close any open tags
+    if in_blockquote:
+        html_parts.append('</blockquote>\n')
     if in_list:
-        html_parts.append("</ul>")
-    
-    # Wrap all content in a div for now (no data-track)
+        html_parts.append('</ul>\n')
+    if in_ordered_list:
+        html_parts.append('</ol>\n')
+
     full_html = "".join(html_parts)
-    
+
     # Add data-track="1" to first <p> like the real editor does
     full_html = full_html.replace("<p>", '<p data-track="1">', 1)
-    
+
     return full_html
+
 
 def publish_article(title, html_content, cookie):
     """发布图文文章到头条号"""
     url = "https://mp.toutiao.com/mp/agw/article/publish?source=mp&type=article&aid=1231"
-    
+
     word_count = len(re.sub(r"<[^>]+>", "", html_content))
-    
+
     data = urllib.parse.urlencode({
         "content": html_content,
         "title": title,
@@ -141,7 +320,7 @@ def publish_article(title, html_content, cookie):
             "tuwen_wtt_trans_flag": "0",
         }, ensure_ascii=False),
     }).encode("utf-8")
-    
+
     headers = {
         "Cookie": cookie,
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0",
@@ -150,13 +329,13 @@ def publish_article(title, html_content, cookie):
         "Origin": "https://mp.toutiao.com",
         "Referer": "https://mp.toutiao.com/profile_v4/graphic/publish",
     }
-    
+
     req = urllib.request.Request(url, data=data, headers=headers, method="POST")
-    
+
     try:
         with urllib.request.urlopen(req, timeout=30) as resp:
             result = json.loads(resp.read().decode("utf-8"))
-            
+
             if result.get("code") == 0:
                 pgc_id = result.get("data", {}).get("pgc_id", "")
                 print(f"✅ 头条号发布成功!")
@@ -176,14 +355,15 @@ def publish_article(title, html_content, cookie):
         print(f"❌ 网络错误: {e.reason}")
         return False, None
 
+
 def main():
     if len(sys.argv) < 2:
         print("用法: python3 scripts/publish_toutiao.py <markdown_file>")
         print("也可以从 stdin 读取: python3 scripts/publish_toutiao.py -")
         sys.exit(1)
-    
+
     filepath = sys.argv[1]
-    
+
     if filepath == "-":
         stdin_data = sys.stdin.read().strip()
         if not stdin_data:
@@ -202,22 +382,22 @@ def main():
         body = stdin_data
     else:
         title, body = parse_markdown_post(filepath)
-    
+
     if not title:
         print("❌ Could not extract title")
         sys.exit(1)
-    
+
     print(f"📝 准备发布: {title}")
-    
+
     # Convert markdown to HTML
     html_content = markdown_to_toutiao_html(body)
-    
+
     # Load cookie
     cookie = load_cookie()
-    
+
     # Publish
     success, pgc_id = publish_article(title, html_content, cookie)
-    
+
     if success:
         # Save the pgc_id to a log file for reference
         log_path = SITE_DIR / "scripts" / ".toutiao_published_ids"
