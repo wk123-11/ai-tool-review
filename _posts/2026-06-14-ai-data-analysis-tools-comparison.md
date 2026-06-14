@@ -13,7 +13,7 @@ ChatGPT Advanced Data Analysis、Julius AI、Notion AI、Tableau AI、Salesforce
 
 ## 1. Julius AI — 专为数据分析而生的AI Agent
 
-**价格标签**：免费版 $0 / Plus $20/月 / Pro $45/月 / Max $200/月 / Business $450/月（10席位）
+**价格标签**：免费版 $0 / Plus $20/月 / Pro $45/月 / Max $200/月 / Business $450/月（10席位） / Ultra $500/月
 
 **一句话评价**：目前市面上最纯粹的数据分析AI工具，没有之一。
 
@@ -21,13 +21,13 @@ Julius AI（原名 Julius）从一开始就定位为"AI数据科学家"，而不
 
 ### 核心规格
 
-| 功能 | Free | Plus | Pro | Business |
-|------|------|------|-----|----------|
-| 月配额 | 每日免费 | 2,000 积分 | 5,000 积分 | 60,000 积分 |
-| 可用模型 | Julius + GPT 5.5 | + Claude Opus 4.8 | 同Plus | 同Plus |
-| RAM | 2 GB | — | 32 GB | 32 GB |
-| 数据连接器 | Google Drive | 同Free | 同Free | + Postgres/BigQuery/Snowflake |
-| 导出格式 | — | Slides/HTML/图表/图片 | 同Plus | 同Plus |
+| 功能 | Free | Plus | Pro | Max | Business |
+|------|------|------|-----|-----|----------|
+| 月配额 | 每日免费 | 2,000 积分 | 5,000 积分 | 25,000 积分 | 60,000 积分 |
+| 可用模型 | Julius + GPT 5.5 | + Claude Opus 4.8 | 同Plus | 同Plus | 同Plus |
+| RAM | 2 GB | — | 32 GB | 32 GB | 32 GB |
+| 数据连接器 | Google Drive | 同Free | 同Free | 同Free | + Postgres/BigQuery/Snowflake |
+| 导出格式 | — | Slides/HTML/图表/图片 | 同Plus | 同Plus | 同Plus |
 
 ### 用户真实评价
 
@@ -39,7 +39,7 @@ Julius AI（原名 Julius）从一开始就定位为"AI数据科学家"，而不
 
 ## 2. ChatGPT Advanced Data Analysis — 最通用的AI分析平台
 
-**价格标签**：免费版 $0 / Plus $20/月 / Pro $100+/月
+**价格标签**：免费版 $0 / Plus $20/月 / Pro $100起/月（5-20倍用量）
 
 **一句话评价**：最"便宜"的数据分析入口，功能覆盖面最广。
 
