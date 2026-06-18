@@ -104,9 +104,9 @@
         "output": 5779,
         "total": 26337
       },
-      "claude_input_chars": 0,
-      "claude_output_chars": 0,
-      "publish_success": false
+      "claude_input_chars": 6164,
+      "claude_output_chars": 300,
+      "publish_success": true
     }
   ]
 }
