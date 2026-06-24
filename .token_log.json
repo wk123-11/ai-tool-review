@@ -154,7 +154,7 @@
       },
       "claude_input_chars": 5844,
       "claude_output_chars": 900,
-      "publish_success": false
+      "publish_success": true
     }
   ]
 }
