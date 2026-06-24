@@ -1,12 +1,12 @@
 ---
-title: 2026年五大AI搜索引擎横评：ChatGPT搜索 vs Perplexity vs Gemini vs Copilot
+title: 2026四大AI搜索引擎横评：谁更值得用？
 date: 2026-06-23
 layout: post
 categories: [AI工具, AI搜索]
 tags: [AI搜索引擎, ChatGPT搜索, Perplexity, Gemini, Copilot]
 ---
 
-# 2026年五大AI搜索引擎横评：谁才是真正的"答案引擎"？
+# 2026四大AI搜索引擎横评：谁更值得用？
 
 传统搜索靠"十根蓝链接"让你自己翻，AI搜索直接给你答案。2026年，ChatGPT Search、Perplexity、Google Gemini、Microsoft Copilot 四大选手全面铺开，背后还潜伏着 You.com、Komo Search 等新玩家。本文从**搜索质量、定价、特色功能、真实用户反馈**四个维度做横向对比。
 
@@ -54,9 +54,9 @@ tags: [AI搜索引擎, ChatGPT搜索, Perplexity, Gemini, Copilot]
 - **Free**：免费，有限 GPT-5.5 Instant 搜索 + 有限 Deep Research
 - **Go**：$8/月，更多消息配额，更长上下文（54K token）
 - **Plus**：$20/月，GPT-5.5 Thinking 高级推理，Deep Research 扩展，Agent 模式
-- **Pro**：$100/月起，5-20 倍使用量，GPT-5.5 Pro，最大上下文 128K
+- **Pro**：$100/月起，5-20 倍使用量，GPT-5.5 Pro，最大上下文 400K
 
-**核心规格**：GPT-5.5 Thinking 深度推理搜索，支持文件上传、图像生成、任务调度、数据分析，提供 128K token 上下文窗口（Pro 版）。
+**核心规格**：GPT-5.5 Thinking 深度推理搜索，支持文件上传、图像生成、任务调度、数据分析，提供 400K token 上下文窗口（Pro 版推理模型）。
 
 **真实用户评价**：
 - Reddit u/GPTheavy："ChatGPT Search 在代码搜索方面无敌，能直接给出可运行的代码块和错误调试方案，比 Stack Overflow 还快。但常规知识搜索偶尔编造来源。"（r/ChatGPT, 2026-05）
