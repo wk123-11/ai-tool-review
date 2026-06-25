@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "2026年AI绘图工具横评：Midjourney、Adobe Firefly、Leonardo AI谁最强？"
+title: "2026 AI绘图工具横评：五款主流方案对比"
 date: 2026-06-25
 categories: ai-tools
 tags: [AI绘图, Midjourney, Adobe Firefly, Leonardo AI, 图像生成]
