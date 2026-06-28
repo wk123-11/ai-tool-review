@@ -200,8 +200,8 @@
         "output": 5705,
         "total": 26115
       },
-      "claude_input_chars": 0,
-      "claude_output_chars": 0,
+      "claude_input_chars": 6035,
+      "claude_output_chars": 300,
       "publish_success": false
     }
   ]
