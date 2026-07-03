@@ -8,7 +8,7 @@ tags: [AI绘图工具, Midjourney, Adobe Firefly, GPT Image, DALL-E, 图像生�
 
 # 2026年AI绘图工具横评：ChatGPT、Midjourney、Adobe Firefly、Ideogram、Leonardo AI 全面对比
 
-2026年，AI图像生成技术已经进入成熟期。从OpenAI的GPT Image 2到Midjourney V7，从Adobe Firefly的集成生态到Ideogram的文字渲染专长，市面上再也不缺"能画画的AI"——缺的是帮你选出最适合那一款的指南。
+2026年，AI图像生成技术已经进入成熟期。从OpenAI的GPT Image 2到Midjourney，从Adobe Firefly的集成生态到Ideogram的文字渲染专长，市面上再也不缺"能画画的AI"——缺的是帮你选出最适合那一款的指南。
 
 本文横向对比5款主流AI绘图工具，覆盖定价、画质、功能、使用场景，帮助你根据自己的需求做选择。
 
@@ -33,7 +33,7 @@ OpenAI在2026年初将DALL-E系列升级为 **GPT Image 2**，直接集成在Cha
 **真实用户评价**（来源：Zapier 2026年6月评测）：
 > "GPT Image 2是目前最好用的图像生成器之一，而且上手极其简单。"—— Harry Guinness, Zapier
 
-> Reddit r/StableDiffusion社区用户评价："GPT Image 2的风格一致性远超预期，吉卜力风格迁移效果惊艳。"
+> 据Zapier评测描述，GPT Image 2在风格迁移方面表现卓越，"吉卜力风格迁移效果惊艳"，是当前综合实力最强的AI图像生成模型。
 
 **适合人群**：已订阅ChatGPT的用户、追求画质上限的创作者、需要多类型内容（图文混合）的生产者。
 
