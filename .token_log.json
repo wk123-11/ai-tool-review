@@ -260,7 +260,7 @@
         "output": 5486,
         "total": 25458
       },
-      "claude_input_chars": 0,
+      "claude_input_chars": 5651,
       "claude_output_chars": 0,
       "publish_success": false
     }
