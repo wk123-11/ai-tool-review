@@ -1,5 +1,5 @@
 ---
-title: 2026年AI视频生成工具横评：Runway vs Pika vs Luma vs 可灵，Sora关停后的新格局
+title: 2026 AI视频生成工具横评：四款主流对比
 date: 2026-07-05
 categories: AI工具评测
 tags: [AI视频生成, Runway, Pika, Luma, 可灵Kling, Sora, 视频生成]
