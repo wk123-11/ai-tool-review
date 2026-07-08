@@ -296,7 +296,7 @@
         "output": 6025,
         "total": 27075
       },
-      "claude_input_chars": 0,
+      "claude_input_chars": 6595,
       "claude_output_chars": 0,
       "publish_success": false
     }
