@@ -24,8 +24,6 @@ GitHub Copilot 由 GitHub（微软）开发，集成在 VS Code、Visual Studio�
 | Pro | $10/用户/月 | 无限补全 + $15 AI额度/月 |
 | Pro+ | $39/用户/月 | $70 AI额度/月 + 审计日志 |
 | Max | $100/用户/月 | $200 AI额度/月 + 优先体验新特性 |
-| Business | $19/用户/月 | 团队管理 + IP赔偿 |
-| Enterprise | $39/用户/月 | 企业级安全 + SAML SSO |
 
 Copilot 引入了 AI Credits 系统，1 credit = $0.01。代码补全不消耗额度，Chat、Agent 模式、代码审查、Copilot CLI 消耗额度。额度用完后可按 $0.01/cr 购买追加。
 
@@ -77,7 +75,7 @@ Amazon Q Developer 是 AWS 推出的AI编程助手，深度集成 AWS 生态，�
 
 **一句话评价**：AWS 生态集成最强，免费层慷慨，Pro 层性价比突出。
 
-**核心规格**：支持 VS Code、JetBrains、CLI 使用；Agentic 编程支持生成计划和跨文件修改；Java 应用程序升级转换（Pro层 4,000 LOC/用户/月，池化）；控制台 Q&A 直接在 AWS Console 中问答；代码引用跟踪和参考追踪；IAM Identity Center 支持（Pro层）；支持管理员面板和策略控制。
+**核心规格**：支持 VS Code、JetBrains、CLI 使用；Agentic 编程支持生成计划和跨文件修改；Java 应用程序升级转换（Pro层 4,000 LOC/用户/月，池化）；控制台 Q&A 直接在 AWS Console 中问答；代码引用跟踪和参考追踪；内置漏洞扫描和安全代码审查；IAM Identity Center 支持（Pro层）；支持管理员面板和策略控制。
 
 **超额计费**：Java 转换超额 $0.003/LOC，Pro层池化（10用户 = 40,000 LOC/月）。
 
@@ -143,12 +141,12 @@ Devin Desktop 是 Cognition AI 在2026年将 Windsurf 全面升级后的产品�
 |------|---------------|--------|-------------------|-------------|---------------|
 | **起售价（个人）** | $0（Free）/ $10（Pro） | $0（Hobby）/ $20（Pro） | $0（Free）/ $19（Pro） | $20（Pro含Claude Code） | $0（Free）/ $20（Pro） |
 | **编辑器覆盖** | VS Code, VS, JetBrains, Xcode, Neovim, Eclipse, Zed | VS Code 生态 | VS Code, JetBrains, CLI | CLI, VS Code, Cursor, Desktop, Web | 自有 IDE + JetBrains |
-| **Agent 多文件编辑** | ✅（Pro+） | ✅ | ✅ | ✅ | ✅ |
+| **Agent 多文件编辑** | ✅（Pro） | ✅ | ✅ | ✅ | ✅ |
 | **Agent 云端运行** | ✅（Cloud Agent） | ✅（Cloud Agents） | ❌ | ✅（Web/Cloud） | ✅（Devin Cloud） |
-| **PR 审查** | ✅（GitHub.com） | ✅（Bugbot） | ❌ | ✅（Git 集成） | ✅（集成） |
+| **PR 审查** | ✅（GitHub.com） | ✅（Bugbot） | ✅（自动代码审查 + 漏洞扫描） | ✅（Git 集成） | ✅（集成） |
 | **本地部署** | ❌（云端） | ❌（云端） | ❌（云端） | ✅（CLI 本地） | ✅（部分本地） |
-| **安全扫描** | ✅（Copilot Autofix + GHAS） | ❌ | ❌ | ❌ | ❌ |
-| **IP 赔偿** | Business/Enterprise | ❌ | Pro | ❌ | ❌ |
+| **安全扫描** | ✅（Copilot Autofix + GHAS） | ❌ | ✅（漏洞扫描 + 代码安全审查） | ❌ | ❌ |
+| **IP 赔偿** | 仅 Business/Enterprise（未在本表列出） | ❌ | Pro | ❌ | ❌ |
 | **免费层** | ✅（有限补全） | ✅（有限请求） | ✅（50次/月） | ❌ | ✅（有限Agent） |
 
 ![代码审查与协作界面](/images/ai-code-collaboration.jpg)
