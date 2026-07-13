@@ -18,7 +18,7 @@ tags: [AI写作, ChatGPT, Claude, Jasper, Grammarly, Copy.ai, 2026]
 
 ## ChatGPT — 全能型AI写作引擎
 
-![AI写作内容策略](/images/ai-writing-content-strategy.jpg)
+![AI写作创作空间](/images/ai-writing-desk-creative.jpg)
 
 **价格**：Free（免费）/ Plus $20/月 / Pro $200/月 / Business $25/用户/月起 / Enterprise 定制
 
@@ -80,6 +80,8 @@ Jasper（原Jarvis）是专为营销场景设计的AI写作工具，2026年已�
 **适合人群**：营销团队、内容运营、SEO专员——需要批量生产品牌内容且对语调一致性有要求的场景。
 
 ## Grammarly — 写作辅助第一选择
+
+![AI写作笔记本](/images/ai-writing-notebook-typing.jpg)
 
 **价格**：Free（免费）/ Pro $12/月（年付） / Enterprise 定制
 
