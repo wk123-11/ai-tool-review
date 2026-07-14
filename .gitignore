@@ -1,1 +1,21 @@
-.ghtoken
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Local secrets and state
+.env
+.env.*
+!.env.example
+scripts/.ghtoken
+scripts/.toutiao_cookie
+scripts/.zhihu_cookie
+.local/
+scripts/.toutiao_published_ids
+scripts/.zhihu_published_ids
+
+# Generated previews/builds
+preview/
+preview-*.html
+_site/
+.DS_Store

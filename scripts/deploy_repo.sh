@@ -1,20 +1,10 @@
-#!/bin/bash
-# AI工具派 - 部署到 GitHub Pages
-# 用法: ./scripts/deploy_repo.sh
-set -e
-
-TOKEN=$(cat /home/wk/ai-tool-review/scripts/.ghtoken)
-
-cd /home/wk/ai-tool-review
-
-# 设置远程仓库（使用 .ghtoken 中的 token）
-git remote remove origin 2>/dev/null || true
-git remote add origin "https://wk123-11:${TOKEN}@github.com/wk123-11/ai-tool-review.git"
-
-# 推送到 GitHub
-echo "=== 推送到 GitHub ==="
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+remote="$(git remote get-url origin 2>/dev/null || true)"
+if [[ -z "$remote" ]]; then echo "ERROR: configure git remote origin first." >&2; exit 1; fi
+if [[ "$remote" =~ https://[^/]*:[^@]+@github.com ]]; then echo "ERROR: origin contains embedded credentials." >&2; exit 1; fi
 git add -A
-git commit --allow-empty -m "Update $(date +%Y-%m-%d)" 2>/dev/null || true
-git push -u origin main 2>&1
-
-echo "=== 完成 ==="
+if ! git diff --cached --quiet; then git commit -m "Update $(date +%Y-%m-%d)"; fi
+git push -u origin main
