@@ -383,9 +383,11 @@
         "output": 5624,
         "total": 25872
       },
-      "claude_input_chars": 0,
+      "claude_input_chars": 5892,
       "claude_output_chars": 0,
-      "publish_success": false
+      "publish_success": true,
+      "toutiao_pgc_id": "7662545225830695424",
+      "zhihu_publish_failed": "cookie expired"
     }
   ]
 }
