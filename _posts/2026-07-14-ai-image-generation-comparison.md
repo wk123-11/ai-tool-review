@@ -95,7 +95,7 @@ Stability AI 在2026年推出了 Stable Diffusion 3.5 系列，同时通过 Bran
 
 ## OpenAI GPT Image 1.5：ChatGPT 原生集成
 
-![GPT Image 生成示意图](/images/ai-img-prompt-design.jpg)
+![GPT Image 生成示意图](/images/ai-art-robot-painting.jpg)
 
 OpenAI 在2025年底将图像生成能力深度整合进 ChatGPT，不再使用 DALL-E 品牌，而是以 GPT Image 模型命名。当前最新版本为 GPT Image 1.5，支持文字渲染、多轮编辑、图生图等能力。
 
