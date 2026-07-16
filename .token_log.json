@@ -388,6 +388,18 @@
       "publish_success": true,
       "toutiao_pgc_id": "7662545225830695424",
       "zhihu_publish_failed": "cookie expired"
+    },
+    {
+      "date": "2026-07-16",
+      "article_chars": 6704,
+      "deepseek_tokens": {
+        "input": 22660,
+        "output": 6830,
+        "total": 29490
+      },
+      "claude_input_chars": 0,
+      "claude_output_chars": 0,
+      "publish_success": false
     }
   ]
 }
