@@ -1,3 +1,11 @@
 #!/bin/bash
-echo "wk123-11"
-echo "$(cat /home/wk/ai-tool-review/scripts/.ghtoken | tr -d '\n')"
+# GIT_ASKPASS helper: output token from .ghtoken file
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+case "$1" in
+  *Username*|*username*)
+    echo "wk123-11"
+    ;;
+  *Password*|*password*|*Token*|*token*)
+    cat "$SCRIPT_DIR/.ghtoken"
+    ;;
+esac
