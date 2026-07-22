@@ -10,7 +10,7 @@ tags: [AI编程助手, GitHub Copilot, Cursor, Amazon Q Developer, JetBrains AI,
 
 ![代码编辑界面](/images/ai-coding-screen-code.jpg)
 
-AI编程助手已经成为开发者日常工作中不可或缺的工具。截至2026年7月，GitHub Copilot已覆盖超过200万付费用户，Cursor凭借AI原生IDE体验快速崛起，Amazon Q Developer借力AWS生态渗透企业市场。本文横评6款主流AI编程助手，从定价、功能、编辑器覆盖、用户口碑四个维度给出真实数据。
+AI编程助手已经成为开发者日常工作中不可或缺的工具。GitHub Copilot覆盖全球数百万开发者，Cursor凭借AI原生IDE体验快速崛起，Amazon Q Developer借力AWS生态渗透企业市场。本文横评6款主流AI编程助手，从定价、功能、编辑器覆盖、用户口碑四个维度给出真实数据。
 
 ## GitHub Copilot：市场领导者，分层最细
 
@@ -111,7 +111,7 @@ Tabnine的核心差异在于安全——可以部署在完全隔离的环境中�
 - 支持模型：SWE 1.7、Claude、GPT、Gemini等
 - 深度集成：GitHub、GitLab、Jira、Slack
 
-与传统的AI编码助手不同，Devin是"自主AI工程师"——可以独立解决GitHub Issue、创建PR、运行测试。2025年收购Codeium/Windsurf后，进一步扩展了开发者基础。
+与传统的AI编码助手不同，Devin是"自主AI工程师"——可以独立解决GitHub Issue、创建PR、运行测试。母公司Cognition Labs收购了Codeium（原Windsurf），进一步扩展了开发者基础。
 
 **适合人群**：需要AI自主完成编码任务的高级团队、希望减少重复工程工作的组织。
 
