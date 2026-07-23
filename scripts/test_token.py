@@ -1,44 +1,39 @@
 #!/usr/bin/env python3
-"""Test if GitHub token is valid."""
-import subprocess, os, json
+"""Test GitHub token validity."""
+import os, urllib.request, json
 
-script_dir = os.path.dirname(os.path.abspath(__file__))
-ghtoken_path = os.path.join(script_dir, '.ghtoken')
-
-with open(ghtoken_path) as f:
+token_path = os.path.join(os.path.dirname(__file__), '.ghtoken')
+with open(token_path) as f:
     token = f.read().strip()
 
-print(f"Token: {token[:20]}...{token[-10:]}")
-print(f"Token length: {len(token)}")
+# Test with GitHub API
+req = urllib.request.Request('https://api.github.com/user')
+req.add_header('Authorization', f'token {token}')
+req.add_header('User-Agent', 'Hermes-Cron')
 
-env = os.environ.copy()
-env['https_proxy'] = 'http://172.21.16.1:7890'
+proxy_handler = urllib.request.ProxyHandler({'https': 'http://172.21.16.1:7890'})
+opener = urllib.request.build_opener(proxy_handler)
 
-result = subprocess.run(
-    ['curl', '-s', '-w', '\n%{http_code}', '-H', f'Authorization: Bearer {token}',
-     'https://api.github.com/user'],
-    env=env, capture_output=True, text=True
-)
-output = result.stdout.strip()
-lines = output.rsplit('\n', 1)
-http_code = lines[-1] if lines else 'unknown'
-body = '\n'.join(lines[:-1]) if len(lines) > 1 else ''
-print(f"HTTP code: {http_code}")
 try:
-    data = json.loads(body)
-    print(f"Login: {data.get('login', 'N/A')}")
-    print(f"Type: {data.get('type', 'N/A')}")
-except:
-    print(f"Body (truncated): {body[:200]}")
+    resp = opener.open(req)
+    data = json.loads(resp.read())
+    print(f"Token user: {data['login']}")
+    print(f"Token OK")
+except urllib.request.HTTPError as e:
+    print(f"HTTP {e.code}: {e.read().decode()}")
+except Exception as e:
+    print(f"Error: {e}")
 
-result2 = subprocess.run(
-    ['curl', '-s', '-w', '\n%{http_code}', '-H', f'Authorization: Bearer {token}',
-     'https://api.github.com/repos/wk123-11/ai-tool-review'],
-    env=env, capture_output=True, text=True
+# Also test the repo write access
+req2 = urllib.request.Request(
+    'https://api.github.com/repos/wk123-11/ai-tool-review',
+    method='GET'
 )
-output2 = result2.stdout.strip()
-lines2 = output2.rsplit('\n', 1)
-http_code2 = lines2[-1] if lines2 else 'unknown'
-body2 = '\n'.join(lines2[:-1]) if len(lines2) > 1 else ''
-print(f"\nRepo access HTTP: {http_code2}")
-print(f"Body: {body2[:200]}")
+req2.add_header('Authorization', f'token {token}')
+req2.add_header('User-Agent', 'Hermes-Cron')
+try:
+    resp = opener.open(req2)
+    data = json.loads(resp.read())
+    print(f"Repo: {data['full_name']}, access: {data.get('permissions', {})}")
+except urllib.request.HTTPError as e:
+    print(f"Repo check HTTP {e.code}: {e.read().decode()}")
