@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "2026年AI翻译工具实测：DeepL、谷歌翻译、微软翻译、ChatGPT翻译横评"
+title: "2026年AI翻译工具实测：四大主流横评"
 date: 2026-07-23
 categories: ai-tools
 tags: [翻译工具, DeepL, Google Translate, 微软翻译, ChatGPT, AI翻译]
