@@ -493,6 +493,18 @@
         "output": 8140,
         "total": 33420
       },
+      "claude_input_chars": 10295,
+      "claude_output_chars": 0,
+      "publish_success": false
+    },
+    {
+      "date": "2026-07-25",
+      "article_chars": 5345,
+      "deepseek_tokens": {
+        "input": 21108,
+        "output": 6054,
+        "total": 27162
+      },
       "claude_input_chars": 0,
       "claude_output_chars": 0,
       "publish_success": false

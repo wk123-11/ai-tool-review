@@ -29,7 +29,7 @@ tags: [AI绘图, Midjourney, DALL-E, Stable Diffusion, Adobe Firefly, Ideogram]
 
 **核心规格：**
 - 开发公司：Midjourney Inc.
-- 当前版本：Midjourney v7（2026年初发布）
+- 当前版本：Midjourney v6+ / Web Alpha（持续更新中）
 - 使用方式：Discord机器人 / Web Alpha界面
 - 平台支持：Discord Web/App、Web Alpha
 - 关键功能：文生图、图生图、Vary Region局部修图、Pan拓展画布、视频生成（SD/HD）、Style Reference风格参考
