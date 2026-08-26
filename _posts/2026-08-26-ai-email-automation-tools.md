@@ -35,7 +35,7 @@ tags: [AI邮件, 收件箱零, 邮件自动回复, 效率工具, 2026]
 - 支持 Gmail / Outlook / Google Workspace / Microsoft 365
 
 **用户真实评价**：
-> "The command palette and keyboard-first design are unmatched, but honestly the $33/month Business tier is the only one that makes the AI features actually worth it for teams."（Reddit r/productivity 用户）
+> Reddit r/productivity 上多位键盘流用户普遍反馈，Superhuman 的命令面板和全键盘操作手感是目前最快的，但也有用户指出 Business 档（$33/月）才真正配齐 AI 自动起草等能力，个人用 Starter 档性价比一般（综合多篇讨论的转述）。
 
 **适合人群**：每天邮件量极大、把"快"看得比"便宜"更重的个人或团队。若只用基础收发，Starter 的 AI 能力有限，性价比一般。
 
@@ -87,7 +87,7 @@ tags: [AI邮件, 收件箱零, 邮件自动回复, 效率工具, 2026]
 - 支持 Gmail / Outlook / Apple Mail / Thunderbird 等主流客户端
 
 **用户真实评价**：
-> "The Smart Compose feature drafts replies that actually sound like me, and the tracking tells me exactly when the client opened the proposal."（V2EX 用户在邮件效率工具讨论中的评价）
+> V2EX 邮件效率工具讨论中，有用户表示 Smart Compose 起草的回复语气贴合自己，追踪功能能即时知道客户何时打开了方案（综合讨论转述，非原句）。
 
 **适合人群**：不想迁移邮箱、只想在现有 Gmail/Outlook 上加一层 AI 能力的个人和团队。Smart 档是功能与价格的平衡点。
 
@@ -104,7 +104,7 @@ tags: [AI邮件, 收件箱零, 邮件自动回复, 效率工具, 2026]
 - 隐私与数据默认在 Google 体系内
 
 **用户真实评价**：
-> "I didn't need another subscription — Gmail's built-in 'Help me write' plus a quick Gemini summary covers 80% of what I used to pay a third-party tool for."（Reddit r/googleworkspace 用户）
+> Reddit r/googleworkspace 上有用户表示，Gmail 内置的"帮我写"加上 Gemini 摘要，能覆盖过去需要付费第三方工具八成的场景，不必再单独订阅（综合讨论转述，非原句）。
 
 **适合人群**：预算为零、或已用 Google Workspace 的绝大多数普通用户。先把它用满，再考虑付费工具。
 
