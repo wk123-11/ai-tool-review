@@ -2,6 +2,7 @@
 .venv/
 __pycache__/
 *.pyc
+diag_upload.py
 
 # Local secrets and state
 .env
