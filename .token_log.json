@@ -709,7 +709,7 @@
         "output": 4612,
         "total": 22836
       },
-      "claude_input_chars": 0,
+      "claude_input_chars": 4121,
       "claude_output_chars": 0,
       "publish_success": false
     }
