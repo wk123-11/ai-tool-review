@@ -793,7 +793,7 @@
         "output": 5205,
         "total": 24615
       },
-      "claude_input_chars": 0,
+      "claude_input_chars": 5160,
       "claude_output_chars": 0,
       "publish_success": false
     }
