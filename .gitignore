@@ -20,3 +20,4 @@ preview/
 preview-*.html
 _site/
 .DS_Store
+scripts/.ghtoken.bak*
