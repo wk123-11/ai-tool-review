@@ -943,11 +943,11 @@
     },
     {
       "date": "2026-09-21",
-      "article_chars": 4346,
+      "article_chars": 4635,
       "deepseek_tokens": {
-        "input": 19966,
-        "output": 5483,
-        "total": 25449
+        "input": 20296,
+        "output": 5648,
+        "total": 25944
       },
       "claude_input_chars": 0,
       "claude_output_chars": 0,
