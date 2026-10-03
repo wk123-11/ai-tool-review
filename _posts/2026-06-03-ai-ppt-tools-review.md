@@ -1,5 +1,5 @@
 ---
-|layout: post
+layout: post
 title: "2026年AI做PPT工具横评：四款主流产品深度对比"
 date: 2026-06-03
 categories: ai-tools

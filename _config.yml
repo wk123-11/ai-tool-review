@@ -1,9 +1,24 @@
 title: AI 智能工具派评测站
 description: 评测 AI 工具、开发效率提升指南
-baseurl: /
-url: https://ai-tools.wk.dev
+baseurl: "/ai-tool-review"
+url: "https://wk123-11.github.io"
 author: WK
-collections:
-  posts:
-    permalink: /:year-:month-:day-:title:
-    output: true
+markdown: kramdown
+permalink: "/:year/:month/:day/:title/"
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+exclude:
+  - scripts/
+  - tests/
+  - sessions/
+  - README.md
+  - HANDOVER_REPORT.md
+  - .env.example
+  - preview-2026-06-01.html
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post

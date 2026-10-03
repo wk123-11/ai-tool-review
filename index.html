@@ -8,8 +8,8 @@ title: AI工具派
 </section>
 
 <section class="posts-list">
-  <h3>最新文章</h3>
-  {% for post in site.posts limit:20 %}
+  <h3>全部文章（{{ site.posts | size }} 篇）</h3>
+  {% for post in site.posts %}
   <article class="post-item">
     <h4><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h4>
     <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 120 }}</p>
